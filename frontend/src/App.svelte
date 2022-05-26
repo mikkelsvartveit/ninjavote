@@ -4,34 +4,34 @@
   import io from "socket.io-client";
   import { onMount } from "svelte";
 
-  const socket = io("http://localhost:3030");
+  // @ts-ignore - isProduction comes from Rollup config
+  const API_URL = isProduction ? "/" : "http://localhost:3030";
+
+  const socket = io(API_URL);
   // @ts-ignore
-  const client = feathers();
-  client.configure(socketio(socket));
-  const pollsService = client.service("polls");
-  const optionsService = client.service("options");
-  const votesService = client.service("votes");
+  const feathersApp = feathers();
+  feathersApp.configure(socketio(socket));
 
   let poll = [];
   let newMessage = "";
 
-  optionsService.on("created", (data) => {
+  feathersApp.service("options").on("created", (data) => {
     console.log(data);
   });
 
-  votesService.on("created", (data) => {
+  feathersApp.service("votes").on("created", (data) => {
     console.log(data);
   });
 
   const addMessage = () => {
     if (newMessage.length > 0) {
-      pollsService.create({ text: newMessage });
+      feathersApp.service("polls").create({ text: newMessage });
       newMessage = "";
     }
   };
 
   onMount(async () => {
-    poll = await pollsService.get("erdukul123");
+    poll = await feathersApp.service("polls").get("erdukul123");
     console.log(poll);
   });
 

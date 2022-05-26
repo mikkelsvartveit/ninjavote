@@ -17,6 +17,7 @@ import appHooks from "./app.hooks";
 import channels from "./channels";
 import { HookContext as FeathersHookContext } from "@feathersjs/feathers";
 import knex from "./knex";
+import { Request, Response } from "express";
 
 const app: Application = express(feathers());
 export type HookContext<T = any> = {
@@ -52,10 +53,15 @@ app.configure(services);
 // Set up event channels (see channels.ts)
 app.configure(channels);
 
-// Configure a middleware for 404s and the error handler
-app.use(express.notFound());
+// Configure a middleware for the error handler
+// app.use(express.notFound());
 app.use(express.errorHandler({ logger } as any));
 
 app.hooks(appHooks);
+
+// Redirect other routes to index.html to let Svelte handle routing
+app.get("*", (req: Request, res: Response) => {
+  res.sendFile(path.resolve(__dirname, "../public", "index.html"));
+});
 
 export default app;

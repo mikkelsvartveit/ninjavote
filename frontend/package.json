@@ -8,9 +8,11 @@
     "start": "sirv public --no-clear",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
+  "proxy": "http://localhost:3030",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
+    "@rollup/plugin-replace": "^4.0.0",
     "@rollup/plugin-typescript": "^8.0.0",
     "@tsconfig/svelte": "^2.0.0",
     "rollup": "^2.3.4",
