@@ -19,6 +19,7 @@ export default function (app: Application): Knex {
             .references("id")
             .inTable("polls")
             .notNullable();
+          table.unique(["pollId", "text"]);
         })
         .then(() => console.log(`Created ${tableName} table`))
         .catch((e) => console.error(`Error creating ${tableName} table`, e));

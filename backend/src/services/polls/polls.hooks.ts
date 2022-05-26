@@ -1,4 +1,4 @@
-import { HooksObject } from "@feathersjs/feathers";
+import { HookContext, HooksObject } from "@feathersjs/feathers";
 import { disallow } from "feathers-hooks-common";
 
 export default {
@@ -15,7 +15,18 @@ export default {
   after: {
     all: [],
     find: [],
-    get: [],
+    get: [
+      async (context: HookContext) => {
+        if (context.params.connection) {
+          context.service.emit("poll-opened", {
+            connection: context.params.connection,
+            pollId: context.id,
+          });
+        }
+
+        return context;
+      },
+    ],
     create: [],
     update: [],
     patch: [],

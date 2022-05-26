@@ -8,25 +8,27 @@
   // @ts-ignore
   const client = feathers();
   client.configure(socketio(socket));
-  const messageService = client.service("messages");
+  const pollsService = client.service("polls");
+  const optionsService = client.service("options");
+  const votesService = client.service("votes");
 
-  let messages = [];
+  let poll = [];
   let newMessage = "";
 
-  client.service("messages").on("created", (message) => {
-    messages = [...messages, message];
+  optionsService.on("created", (data) => {
+    console.log(data);
   });
 
   const addMessage = () => {
     if (newMessage.length > 0) {
-      messageService.create({ text: newMessage });
+      pollsService.create({ text: newMessage });
       newMessage = "";
     }
   };
 
   onMount(async () => {
-    messages = await messageService.find();
-    console.log(messages);
+    poll = await pollsService.get("erdukul123");
+    console.log(poll);
   });
 
   export let name: string;
@@ -38,11 +40,11 @@
   <input bind:value={newMessage} />
   <button on:click={addMessage}>Add message</button>
 
-  <ul>
+  <!-- <ul>
     {#each messages as message}
       <li>{message.text}</li>
     {/each}
-  </ul>
+  </ul> -->
 </main>
 
 <style>
