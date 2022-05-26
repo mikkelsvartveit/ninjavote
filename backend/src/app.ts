@@ -16,7 +16,7 @@ import services from "./services";
 import appHooks from "./app.hooks";
 import channels from "./channels";
 import { HookContext as FeathersHookContext } from "@feathersjs/feathers";
-import DatabaseConnection from "./DatabaseConnection";
+import knex from "./knex";
 
 const app: Application = express(feathers());
 export type HookContext<T = any> = {
@@ -43,6 +43,8 @@ app.use("/", express.static(app.get("public")));
 app.configure(express.rest());
 app.configure(socketio());
 
+app.configure(knex);
+
 // Configure other middleware (see `middleware/index.ts`)
 app.configure(middleware);
 // Set up our services (see `services/index.ts`)
@@ -55,7 +57,5 @@ app.use(express.notFound());
 app.use(express.errorHandler({ logger } as any));
 
 app.hooks(appHooks);
-
-const db = new DatabaseConnection().getKnexInstance();
 
 export default app;

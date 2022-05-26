@@ -1,3 +1,4 @@
 node_modules/
 feathers-test/
 feathers-chat/
+*.sqlite
