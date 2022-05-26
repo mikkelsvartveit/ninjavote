@@ -1,5 +1,7 @@
 import { HookContext, HooksObject } from "@feathersjs/feathers";
 import { disallow } from "feathers-hooks-common";
+import emitPollOpened from "../../hooks/emit-poll-opened";
+import populatePoll from "../../hooks/populate-poll";
 
 export default {
   before: {
@@ -15,18 +17,7 @@ export default {
   after: {
     all: [],
     find: [],
-    get: [
-      async (context: HookContext) => {
-        if (context.params.connection) {
-          context.service.emit("poll-opened", {
-            connection: context.params.connection,
-            pollId: context.id,
-          });
-        }
-
-        return context;
-      },
-    ],
+    get: [populatePoll(), emitPollOpened()],
     create: [],
     update: [],
     patch: [],

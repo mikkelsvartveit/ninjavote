@@ -19,6 +19,10 @@
     console.log(data);
   });
 
+  votesService.on("created", (data) => {
+    console.log(data);
+  });
+
   const addMessage = () => {
     if (newMessage.length > 0) {
       pollsService.create({ text: newMessage });

@@ -13,7 +13,7 @@ export default {
   },
 
   after: {
-    all: [discard("secret")],
+    all: [discard("voterSecret")],
     find: [],
     get: [],
     create: [],
