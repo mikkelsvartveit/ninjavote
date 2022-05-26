@@ -15,8 +15,7 @@ export default function (app: Application): Knex {
           table.increments("id").primary();
           table.string("text").notNullable();
           table
-            .integer("poll_id")
-            .unsigned()
+            .string("pollId")
             .references("id")
             .inTable("polls")
             .notNullable();

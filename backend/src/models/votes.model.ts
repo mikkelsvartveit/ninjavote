@@ -14,12 +14,15 @@ export default function (app: Application): Knex {
         .createTable(tableName, (table) => {
           table.increments("id").primary();
           table.string("name").notNullable();
+          table.string("voterId").notNullable();
+          table.string("voterSecret").notNullable();
           table
-            .integer("option_id")
+            .integer("optionId")
             .unsigned()
             .references("id")
             .inTable("options")
             .notNullable();
+          table.unique(["voterId", "optionId"]);
         })
         .then(() => console.log(`Created ${tableName} table`))
         .catch((e) => console.error(`Error creating ${tableName} table`, e));

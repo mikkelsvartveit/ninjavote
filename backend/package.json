@@ -45,9 +45,11 @@
     "@feathersjs/feathers": "^4.5.15",
     "@feathersjs/socketio": "^4.5.15",
     "@feathersjs/transport-commons": "^4.5.15",
+    "bcrypt": "^5.0.1",
     "better-sqlite3": "^7.5.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
+    "feathers-hooks-common": "^6.1.0",
     "feathers-knex": "^8.0.1",
     "helmet": "^4.6.0",
     "knex": "^2.1.0",
@@ -56,6 +58,7 @@
     "winston": "^3.7.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.2",
     "@types/cors": "^2.8.12",
     "@types/mocha": "^9.1.1",
