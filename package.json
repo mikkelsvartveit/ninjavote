@@ -1,0 +1,15 @@
+{
+  "name": "chatpoll",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently -n Feathers,SvelteKit -c magenta,yellow \"cd backend && npm run dev\" \"cd frontend && npm run dev\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikkelsvartveit/chatpoll.git"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^7.3.0"
+  }
+}
