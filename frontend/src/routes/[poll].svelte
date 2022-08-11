@@ -18,13 +18,20 @@
   const feathersApp = feathers();
   feathersApp.configure(socketio(socket));
 
-  // TODO: add type
+  // TODO: add types
   let poll: any;
-
   let newQuestion = "";
+  let newOption = "";
 
-  feathersApp.service("options").on("created", (data: any) => {
-    console.log(data);
+  $: sortedOptions = poll
+    ? poll.options.sort((a: any, b: any) => a.votes.length - b.votes.length)
+    : [];
+
+  feathersApp.service("options").on("created", (newOption: any) => {
+    console.log(newOption);
+    if (poll) {
+      poll.options = [...poll.options, newOption];
+    }
   });
 
   feathersApp.service("votes").on("created", (data: any) => {
@@ -46,11 +53,31 @@
     };
     poll = await feathersApp.service("polls").create(newPoll);
   };
+
+  const addOption = async () => {
+    const option = {
+      pollId,
+      text: newOption,
+    };
+    await feathersApp.service("options").create(option);
+  };
 </script>
 
 <main>
   {#if poll}
     <h1>{poll?.question ?? "Loading..."}</h1>
+
+    {#each sortedOptions as option}
+      <div>
+        <label>
+          <input type="checkbox" name="option" value={option.id} />
+          {option.text}
+        </label>
+      </div>
+    {/each}
+
+    <input type="text" bind:value={newOption} />
+    <button on:click={addOption}>Create Option</button>
   {:else}
     <h1>Create a new poll</h1>
     <input
