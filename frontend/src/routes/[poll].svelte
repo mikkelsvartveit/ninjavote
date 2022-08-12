@@ -51,7 +51,8 @@
       id: pollId,
       question: newQuestion,
     };
-    poll = await feathersApp.service("polls").create(newPoll);
+    await feathersApp.service("polls").create(newPoll);
+    poll = await feathersApp.service("polls").get(pollId);
   };
 
   const addOption = async () => {
@@ -60,6 +61,7 @@
       text: newOption,
     };
     await feathersApp.service("options").create(option);
+    newOption = "";
   };
 </script>
 
@@ -76,16 +78,20 @@
       </div>
     {/each}
 
-    <input type="text" bind:value={newOption} />
-    <button on:click={addOption}>Create Option</button>
+    <form on:submit|preventDefault={addOption}>
+      <input type="text" bind:value={newOption} />
+      <button>Create Option</button>
+    </form>
   {:else}
     <h1>Create a new poll</h1>
-    <input
-      type="text"
-      bind:value={newQuestion}
-      placeholder="Type your question here..."
-    />
-    <button on:click={createPoll}>Create</button>
+    <form on:submit|preventDefault={createPoll}>
+      <input
+        type="text"
+        bind:value={newQuestion}
+        placeholder="Type your question here..."
+      />
+      <button>Create Poll</button>
+    </form>
   {/if}
 </main>
 
