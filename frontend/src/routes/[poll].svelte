@@ -4,6 +4,7 @@
   import io from "socket.io-client";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
+  import { Button, Modal, Dialog, TextField } from "attractions";
 
   // @ts-ignore - isProduction comes from Rollup config
   // const API_URL = isProduction ? '/' : 'http://localhost:3030';
@@ -19,7 +20,13 @@
   feathersApp.configure(socketio(socket));
 
   // TODO: add types
+  let session: {
+    nickname: string;
+    voterId: string;
+    voterSecret: string;
+  } | null;
   let poll: any;
+  let nickname = "";
   let newQuestion = "";
   let newOption = "";
 
@@ -27,10 +34,10 @@
     ? poll.options.sort((a: any, b: any) => a.votes.length - b.votes.length)
     : [];
 
-  feathersApp.service("options").on("created", (newOption: any) => {
-    console.log(newOption);
+  feathersApp.service("options").on("created", (option: any) => {
+    console.log(option);
     if (poll) {
-      poll.options = [...poll.options, newOption];
+      poll.options = [...poll.options, { ...option, votes: [] }];
     }
   });
 
@@ -39,12 +46,37 @@
   });
 
   onMount(async () => {
+    const sessionJson = localStorage.getItem(pollId);
+    if (sessionJson) {
+      session = JSON.parse(sessionJson);
+    } else {
+      session = null;
+    }
+
     try {
       poll = await feathersApp.service("polls").get(pollId);
     } catch (error) {
       poll = null;
     }
   });
+
+  const createSession = () => {
+    const voterId = Math.random().toString(36).substring(2, 15);
+    const voterSecret = Math.random().toString(36).substring(2, 15);
+
+    // Check if someone with the same nickname has already voted in this poll
+    if (
+      poll.options
+        .reduce((acc: any[], cur: any) => [acc, ...cur.votes], [])
+        .some((vote: any) => vote.name === nickname && vote.voterId !== voterId)
+    ) {
+      // TODO: show error message
+      return;
+    }
+
+    session = { nickname, voterId, voterSecret };
+    localStorage.setItem(pollId, JSON.stringify(session));
+  };
 
   const createPoll = async () => {
     const newPoll = {
@@ -66,7 +98,14 @@
 </script>
 
 <main>
-  {#if poll}
+  <Modal open={session === null} noClickaway>
+    <Dialog constrainWidth title="Enter name">
+      <p>You need a nickname to vote in this poll.</p>
+      <TextField outline bind:value={nickname} placeholder="Name" />
+      <Button on:click={createSession} style="float: right;">Join</Button>
+    </Dialog>
+  </Modal>
+  {#if poll !== null}
     <h1>{poll?.question ?? "Loading..."}</h1>
 
     {#each sortedOptions as option}
@@ -80,7 +119,7 @@
 
     <form on:submit|preventDefault={addOption}>
       <input type="text" bind:value={newOption} />
-      <button>Create Option</button>
+      <Button small filled on:click={addOption}>Create Option</Button>
     </form>
   {:else}
     <h1>Create a new poll</h1>
@@ -96,4 +135,5 @@
 </main>
 
 <style>
+  @import "$/style/main.scss";
 </style>
