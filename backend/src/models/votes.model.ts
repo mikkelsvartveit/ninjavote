@@ -23,6 +23,7 @@ export default function (app: Application): Knex {
             .inTable("options")
             .notNullable();
           table.unique(["voterId", "optionId"]);
+          table.unique(["name", "optionId"]);
         })
         .then(() => console.log(`Created ${tableName} table`))
         .catch((e) => console.error(`Error creating ${tableName} table`, e));
