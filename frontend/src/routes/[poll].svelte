@@ -25,6 +25,7 @@
     voterId: string;
     voterSecret: string;
   } | null;
+
   let poll: any;
   let nickname = "";
   let newQuestion = "";
@@ -105,8 +106,13 @@
       <Button on:click={createSession} style="float: right;">Join</Button>
     </Dialog>
   </Modal>
+
   {#if poll !== null}
     <h1>{poll?.question ?? "Loading..."}</h1>
+
+    {#if session}
+      <p>Poll joined as <b>{session.nickname}</b></p>
+    {/if}
 
     {#each sortedOptions as option}
       <div>
