@@ -4,11 +4,12 @@
   import io from "socket.io-client";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
-  import { Button, Modal, Dialog, TextField } from "attractions";
+  import { Button, Modal, Dialog, TextField, Checkbox } from "attractions";
 
   // @ts-ignore - isProduction comes from Rollup config
   // const API_URL = isProduction ? '/' : 'http://localhost:3030';
   const API_URL = "http://localhost:3030/";
+  // const API_URL = `http://${window.location.hostname}:3030/`;
 
   // Get ID for poll to load
   const { params } = $page;
@@ -32,7 +33,9 @@
   let newOption = "";
 
   $: sortedOptions = poll
-    ? poll.options.sort((a: any, b: any) => a.votes.length - b.votes.length)
+    ? poll.options
+        .sort((a: any, b: any) => a.text.localeCompare(b.text))
+        .sort((a: any, b: any) => b.votes.length - a.votes.length)
     : [];
 
   feathersApp.service("options").on("created", (option: any) => {
@@ -42,8 +45,24 @@
     }
   });
 
-  feathersApp.service("votes").on("created", (data: any) => {
-    console.log(data);
+  feathersApp.service("votes").on("created", (vote: any) => {
+    poll.options
+      .find((option: any) => option.id === vote.optionId)
+      .votes.push(vote);
+
+    // Force re-render of options
+    poll.options = [...poll.options];
+  });
+
+  feathersApp.service("votes").on("removed", (vote: any) => {
+    const option = poll.options.find(
+      (option: any) => option.id === vote.optionId
+    );
+
+    option.votes = option.votes.filter((v: any) => v.id !== vote.id);
+
+    // Force re-render of options
+    poll.options = [...poll.options];
   });
 
   onMount(async () => {
@@ -59,6 +78,8 @@
     } catch (error) {
       poll = null;
     }
+
+    console.log(poll);
   });
 
   const createSession = () => {
@@ -96,10 +117,34 @@
     await feathersApp.service("options").create(option);
     newOption = "";
   };
+
+  const getVoteIdFromOption = (option: any) =>
+    option.votes.find((vote: any) => vote.voterId === session?.voterId).id;
+
+  const isSelected = (option: any) =>
+    option.votes.some((vote: any) => vote.voterId === session?.voterId);
+
+  const toggleOption = (option: any) => {
+    if (isSelected(option)) {
+      feathersApp.service("votes").remove(getVoteIdFromOption(option), {
+        query: {
+          voterId: session?.voterId,
+          voterSecret: session?.voterSecret,
+        },
+      });
+    } else {
+      feathersApp.service("votes").create({
+        optionId: option.id,
+        voterId: session?.voterId,
+        voterSecret: session?.voterSecret,
+        name: session?.nickname,
+      });
+    }
+  };
 </script>
 
 <main>
-  <Modal open={session === null} noClickaway>
+  <Modal open={poll && session === null} noClickaway>
     <Dialog constrainWidth title="Enter name">
       <p>You need a nickname to vote in this poll.</p>
       <TextField outline bind:value={nickname} placeholder="Name" />
@@ -115,11 +160,19 @@
     {/if}
 
     {#each sortedOptions as option}
-      <div>
-        <label>
+      <div class="option-container" class:selected={isSelected(option)}>
+        <Checkbox
+          round
+          value={option.id}
+          checked={isSelected(option)}
+          on:change={() => toggleOption(option)}
+        >
+          <span class="checkbox-label">{option.text}</span>
+        </Checkbox>
+        <!-- <label>
           <input type="checkbox" name="option" value={option.id} />
           {option.text}
-        </label>
+        </label> -->
       </div>
     {/each}
 
@@ -140,6 +193,26 @@
   {/if}
 </main>
 
-<style>
-  @import "$/style/main.scss";
+<style lang="scss">
+  @use "../style/main.scss";
+
+  .option-container {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 8px 0;
+    padding: 0 10px;
+
+    &.selected {
+      background-color: #f0f0f0;
+    }
+
+    &:hover {
+      background-color: #f7f7f7;
+    }
+  }
+
+  .checkbox-label {
+    margin-left: 10px;
+    padding: 15px 0;
+  }
 </style>

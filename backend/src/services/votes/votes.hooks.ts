@@ -1,5 +1,5 @@
 import { HooksObject } from "@feathersjs/feathers";
-import { disallow, discard } from "feathers-hooks-common";
+import { iff, isProvider, disallow, discard } from "feathers-hooks-common";
 
 export default {
   before: {
@@ -13,7 +13,7 @@ export default {
   },
 
   after: {
-    all: [discard("voterSecret")],
+    all: [iff(isProvider("external"), discard("voterSecret"))],
     find: [],
     get: [],
     create: [],

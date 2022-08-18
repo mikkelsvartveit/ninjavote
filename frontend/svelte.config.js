@@ -1,7 +1,8 @@
 import adapter from "@sveltejs/adapter-static";
-import path from "path";
 import preprocess from "svelte-preprocess";
 import makeAttractionsImporter from "attractions/importer.js";
+import path from "path";
+const __dirname = path.resolve();
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -10,8 +11,9 @@ const config = {
   preprocess: preprocess({
     scss: {
       importer: makeAttractionsImporter({
-        themeFile: "./src/style/attractions-theme.scss",
+        themeFile: path.join(__dirname, "./src/style/attractions-theme.scss"),
       }),
+      includePaths: [path.join(__dirname, "./src/style")],
     },
   }),
 
@@ -26,6 +28,10 @@ const config = {
         },
       },
     },
+  },
+
+  experimental: {
+    inspector: true,
   },
 };
 
