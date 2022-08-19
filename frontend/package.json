@@ -34,6 +34,7 @@
   "type": "module",
   "dependencies": {
     "@feathersjs/client": "^4.5.15",
+    "@feathersjs/feathers": "^4.5.15",
     "@feathersjs/socketio-client": "^4.5.15",
     "socket.io-client": "^2.0.0"
   }

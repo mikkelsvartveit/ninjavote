@@ -24,7 +24,7 @@ const config = {
         alias: {
           "xmlhttprequest-ssl":
             "./node_modules/engine.io-client/lib/xmlhttprequest.js",
-          $: "./src",
+          $: path.resolve("./src"),
         },
       },
     },
