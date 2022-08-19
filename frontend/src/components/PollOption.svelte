@@ -43,27 +43,46 @@
     >
       <span class="checkbox-label">{option.text}</span>
     </Checkbox>
+
+    <div
+      class="fraction-indicator"
+      style={`width: ${(option.votes.length / numberOfVoters) * 100}%`}
+    />
   </div>
+
+  <div class="fraction-indicator" />
 </main>
 
 <style lang="scss">
   .option-container {
-    border: 1px solid #ccc;
+    position: relative;
+    box-shadow: inset 0px 0px 0px 1px #ccc;
     border-radius: 5px;
     margin: 8px 0;
     padding: 0 10px;
 
     &.selected {
-      background-color: #f0f0f0;
+      box-shadow: inset 0px 0px 0px 2px #efaf00;
     }
 
     &:hover {
       background-color: #f7f7f7;
     }
-  }
 
-  .checkbox-label {
-    margin-left: 10px;
-    padding: 15px 0;
+    .checkbox-label {
+      margin-left: 10px;
+      padding: 16px 0;
+    }
+
+    .fraction-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      background-color: #efaf00;
+      opacity: 0.07;
+      z-index: -1;
+    }
   }
 </style>

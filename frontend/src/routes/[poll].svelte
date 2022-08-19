@@ -4,7 +4,14 @@
   import io from "socket.io-client";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
-  import { Button, Modal, Dialog, TextField, Checkbox } from "attractions";
+  import {
+    Button,
+    Modal,
+    Dialog,
+    TextField,
+    Checkbox,
+    Accordion,
+  } from "attractions";
   import type { IOption, IPoll, IVote, IVoterSession } from "src/types/poll";
   import PollOption from "../components/PollOption.svelte";
 
@@ -35,6 +42,13 @@
         .sort((a: IOption, b: IOption) => a.text.localeCompare(b.text))
         .sort((a: IOption, b: IOption) => b.votes.length - a.votes.length)
     : [];
+
+  $: numberOfVoters = new Set(
+    poll?.options
+      .map((option: IOption) => option.votes)
+      .reduce((acc: IVote[], votes: IVote[]) => acc.concat(votes), [])
+      .map((vote: IVote) => vote.voterId)
+  ).size;
 
   feathersApp.service("options").on("created", (option: IOption) => {
     console.log(option);
@@ -150,7 +164,7 @@
     {/if}
 
     {#each sortedOptions as option}
-      <PollOption {feathersApp} {session} {option} numberOfVoters={0} />
+      <PollOption {feathersApp} {session} {option} {numberOfVoters} />
     {/each}
 
     <form on:submit|preventDefault={addOption}>
@@ -172,24 +186,4 @@
 
 <style lang="scss">
   @use "../style/main.scss";
-
-  .option-container {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin: 8px 0;
-    padding: 0 10px;
-
-    &.selected {
-      background-color: #f0f0f0;
-    }
-
-    &:hover {
-      background-color: #f7f7f7;
-    }
-  }
-
-  .checkbox-label {
-    margin-left: 10px;
-    padding: 15px 0;
-  }
 </style>
