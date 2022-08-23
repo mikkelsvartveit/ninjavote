@@ -4,16 +4,10 @@
   import io from "socket.io-client";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
-  import {
-    Button,
-    Modal,
-    Dialog,
-    TextField,
-    Checkbox,
-    Accordion,
-  } from "attractions";
+  import { Button, Modal, Dialog, TextField } from "attractions";
   import type { IOption, IPoll, IVote, IVoterSession } from "src/types/poll";
   import PollOption from "../components/PollOption.svelte";
+  import OptionVotersModal from "../components/modals/OptionVotersModal.svelte";
 
   // @ts-ignore - isProduction comes from Rollup config
   // const API_URL = isProduction ? '/' : 'http://localhost:3030';
@@ -24,18 +18,18 @@
   const { params } = $page;
   const pollId = params.poll;
 
+  // Initialize Feathers client
   const socket = io(API_URL);
-  // @ts-ignore
   const feathersApp = feathers();
   feathersApp.configure(socketio(socket));
 
-  // TODO: add types
   let session: IVoterSession | null = null;
 
   let poll: IPoll | null = null;
   let nickname = "";
   let newQuestion = "";
   let newOption = "";
+  let optionToShowInModal: IOption | null = null;
 
   $: sortedOptions = poll
     ? poll.options
@@ -51,7 +45,6 @@
   ).size;
 
   feathersApp.service("options").on("created", (option: IOption) => {
-    console.log(option);
     if (poll) {
       poll.options = [...poll.options, { ...option, votes: [] }];
     }
@@ -67,7 +60,7 @@
         option.votes.push(vote);
 
         // Force re-render of options
-        poll.options = [...poll.options];
+        poll.options = poll.options;
       }
     }
   });
@@ -82,7 +75,7 @@
         option.votes = option.votes.filter((v: IVote) => v.id !== vote.id);
 
         // Force re-render of options
-        poll.options = [...poll.options];
+        poll.options = poll.options;
       }
     }
   });
@@ -100,8 +93,6 @@
     } catch (error) {
       poll = null;
     }
-
-    console.log(poll);
   });
 
   const createSession = () => {
@@ -156,6 +147,11 @@
     </Dialog>
   </Modal>
 
+  <OptionVotersModal
+    option={optionToShowInModal}
+    onClose={() => (optionToShowInModal = null)}
+  />
+
   {#if poll !== null}
     <h1>{poll?.question ?? "Loading..."}</h1>
 
@@ -163,8 +159,14 @@
       <p>Poll joined as <b>{session.nickname}</b></p>
     {/if}
 
-    {#each sortedOptions as option}
-      <PollOption {feathersApp} {session} {option} {numberOfVoters} />
+    {#each sortedOptions as option (option.id)}
+      <PollOption
+        {feathersApp}
+        {session}
+        {option}
+        {numberOfVoters}
+        openVotersModal={() => (optionToShowInModal = option)}
+      />
     {/each}
 
     <form on:submit|preventDefault={addOption}>
