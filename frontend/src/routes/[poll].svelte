@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Application } from "@feathersjs/feathers";
   import feathers from "@feathersjs/client";
   import socketio from "@feathersjs/socketio-client";
   import io from "socket.io-client";
@@ -9,23 +10,15 @@
   import PollOption from "../components/PollOption.svelte";
   import OptionVotersModal from "../components/modals/OptionVotersModal.svelte";
 
-  // @ts-ignore - isProduction comes from Rollup config
-  // const API_URL = isProduction ? '/' : 'http://localhost:3030';
-  const API_URL = "http://localhost:3030/";
-  // const API_URL = `http://${window.location.hostname}:3030/`;
-
   // Get ID for poll to load
   const { params } = $page;
   const pollId = params.poll;
 
-  // Initialize Feathers client
-  const socket = io(API_URL);
-  const feathersApp = feathers();
-  feathersApp.configure(socketio(socket));
+  let feathersApp: Application<any>;
 
   let session: IVoterSession | null = null;
-
   let poll: IPoll | null = null;
+
   let nickname = "";
   let newQuestion = "";
   let newOption = "";
@@ -44,43 +37,51 @@
       .map((vote: IVote) => vote.voterId)
   ).size;
 
-  feathersApp.service("options").on("created", (option: IOption) => {
-    if (poll) {
-      poll.options = [...poll.options, { ...option, votes: [] }];
-    }
-  });
-
-  feathersApp.service("votes").on("created", (vote: IVote) => {
-    if (poll) {
-      const option = poll.options.find(
-        (option: IOption) => option.id === vote.optionId
-      );
-
-      if (option) {
-        option.votes.push(vote);
-
-        // Force re-render of options
-        poll.options = poll.options;
-      }
-    }
-  });
-
-  feathersApp.service("votes").on("removed", (vote: IVote) => {
-    if (poll) {
-      const option = poll.options.find(
-        (option: IOption) => option.id === vote.optionId
-      );
-
-      if (option) {
-        option.votes = option.votes.filter((v: IVote) => v.id !== vote.id);
-
-        // Force re-render of options
-        poll.options = poll.options;
-      }
-    }
-  });
-
   onMount(async () => {
+    const API_URL = `http://${window.location.hostname}:3030/`;
+
+    // Initialize Feathers client
+    const socket = io(API_URL);
+    feathersApp = feathers();
+    feathersApp.configure(socketio(socket));
+
+    // Register Feathers services
+    feathersApp.service("options").on("created", (option: IOption) => {
+      if (poll) {
+        poll.options = [...poll.options, { ...option, votes: [] }];
+      }
+    });
+
+    feathersApp.service("votes").on("created", (vote: IVote) => {
+      if (poll) {
+        const option = poll.options.find(
+          (option: IOption) => option.id === vote.optionId
+        );
+
+        if (option) {
+          option.votes.push(vote);
+
+          // Force re-render of options
+          poll.options = poll.options;
+        }
+      }
+    });
+
+    feathersApp.service("votes").on("removed", (vote: IVote) => {
+      if (poll) {
+        const option = poll.options.find(
+          (option: IOption) => option.id === vote.optionId
+        );
+
+        if (option) {
+          option.votes = option.votes.filter((v: IVote) => v.id !== vote.id);
+
+          // Force re-render of options
+          poll.options = poll.options;
+        }
+      }
+    });
+
     const sessionJson = localStorage.getItem(pollId);
     if (sessionJson) {
       session = JSON.parse(sessionJson);
@@ -190,6 +191,7 @@
   @use "../style/main.scss";
 
   main {
+    font-size: 16px;
     max-width: 600px;
     margin: 30px auto;
     padding: 0 5px;
