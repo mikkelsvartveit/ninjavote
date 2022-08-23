@@ -1,4 +1,6 @@
+@use "variables";
+
 @forward "~attractions/_variables" with (
-  $main: #efaf00,
-  $font: "Nunito"
+  $main: variables.$accent-color-primary,
+  $font: variables.$font
 );

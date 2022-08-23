@@ -9,6 +9,8 @@
 </main>
 
 <style lang="scss">
+  @use "../../style/variables";
+
   .voter-icon {
     display: flex;
     justify-content: center;
@@ -16,15 +18,15 @@
     width: 25px;
     height: 25px;
     border: 2px solid white;
-    box-shadow: 0px 0px 5px 0px #888;
+    box-shadow: 0px 0px 5px 0px variables.$shadow-color;
     border-radius: 100%;
-    background-color: #769289;
+    background-color: variables.$accent-color-secondary;
     margin-left: -5px;
 
     span {
       font-size: 14px;
       font-weight: 700;
-      color: white;
+      color: variables.$text-color-light;
     }
   }
 </style>

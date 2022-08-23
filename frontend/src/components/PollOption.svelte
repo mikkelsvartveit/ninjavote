@@ -72,6 +72,8 @@
 </main>
 
 <style lang="scss">
+  @use "../style/variables";
+
   .option-container {
     display: flex;
     justify-content: space-between;
@@ -82,7 +84,7 @@
     padding: 0 10px;
 
     &.selected {
-      box-shadow: inset 0px 0px 0px 2px #efaf00;
+      box-shadow: inset 0px 0px 0px 2px variables.$accent-color-primary;
     }
 
     * {
@@ -122,7 +124,7 @@
       top: 0;
       left: 0;
       height: 100%;
-      background-color: #efaf00;
+      background-color: variables.$accent-color-primary;
       opacity: 0.07;
       z-index: -1;
     }
