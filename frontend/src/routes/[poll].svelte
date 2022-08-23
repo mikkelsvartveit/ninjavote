@@ -188,4 +188,10 @@
 
 <style lang="scss">
   @use "../style/main.scss";
+
+  main {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 0 5px;
+  }
 </style>
