@@ -3,23 +3,22 @@
   import type { IOption } from "src/types/poll";
   import VoterIcon from "../icons/VoterIcon.svelte";
 
-  export let option: IOption | null;
+  export let option: IOption;
+  export let show: boolean;
   export let onClose: () => void;
 </script>
 
 <main>
-  {#if option !== null}
-    <Modal open={option !== null} let:closeCallback>
-      <Dialog title={`Voters for "${option.text}"`} closeCallback={onClose}>
-        {#each option.votes as vote}
-          <div class="vote">
-            <VoterIcon name={vote.name} />
-            <p>{vote.name}</p>
-          </div>
-        {/each}
-      </Dialog>
-    </Modal>
-  {/if}
+  <Modal open={show} on:change={(event) => !event.detail.value && onClose()}>
+    <Dialog title={`Voters for "${option.text}"`} closeCallback={onClose}>
+      {#each option.votes as vote}
+        <div class="vote">
+          <VoterIcon name={vote.name} />
+          <p>{vote.name}</p>
+        </div>
+      {/each}
+    </Dialog>
+  </Modal>
 </main>
 
 <style lang="scss">

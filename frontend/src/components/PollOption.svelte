@@ -1,54 +1,71 @@
 <script lang="ts">
   import type feathers from "@feathersjs/feathers";
   import { Checkbox } from "attractions";
-  import type { IOption, IVote, IVoterSession } from "src/types/poll";
-  import VoterIcon from "./icons/VoterIcon.svelte";
+  import type { IOption, IVote } from "src/types/poll";
+  import OptionVotersModal from "$/components/modals/OptionVotersModal.svelte";
+  import VoterIcon from "$/components/icons/VoterIcon.svelte";
+  import { poll } from "$/store/pollStore";
+  import { session } from "$/store/sessionStore";
 
   export let feathersApp: feathers.Application<any>;
-  export let session: IVoterSession | null;
   export let option: IOption;
-  export let numberOfVoters: number;
-  export let openVotersModal: () => void;
 
-  const getVoteIdFromOption = (option: IOption) =>
-    option.votes.find((vote: IVote) => vote.voterId === session?.voterId)?.id;
+  let showVotersModal = false;
 
-  const isSelected = (option: IOption) =>
-    option.votes.some((vote: IVote) => vote.voterId === session?.voterId);
+  $: numberOfVoters = new Set(
+    $poll?.options
+      .map((option: IOption) => option.votes)
+      .reduce((acc: IVote[], votes: IVote[]) => acc.concat(votes), [])
+      .map((vote: IVote) => vote.voterId)
+  ).size;
+
+  $: voteId = option.votes.find(
+    (vote: IVote) => vote.voterId === $session?.voterId
+  )?.id;
+
+  $: isSelected = option.votes.some(
+    (vote: IVote) => vote.voterId === $session?.voterId
+  );
 
   const toggleOption = (option: IOption) => {
-    if (isSelected(option)) {
-      feathersApp.service("votes").remove(getVoteIdFromOption(option), {
+    if (isSelected) {
+      feathersApp.service("votes").remove(voteId, {
         query: {
-          voterId: session?.voterId,
-          voterSecret: session?.voterSecret,
+          voterId: $session?.voterId,
+          voterSecret: $session?.voterSecret,
         },
       });
     } else {
       feathersApp.service("votes").create({
         optionId: option.id,
-        voterId: session?.voterId,
-        voterSecret: session?.voterSecret,
-        name: session?.nickname,
+        voterId: $session?.voterId,
+        voterSecret: $session?.voterSecret,
+        name: $session?.nickname,
       });
     }
   };
 </script>
 
 <main>
-  <div class="option-container" class:selected={isSelected(option)}>
+  <OptionVotersModal
+    {option}
+    show={showVotersModal}
+    onClose={() => (showVotersModal = false)}
+  />
+
+  <div class="option-container" class:selected={isSelected}>
     <div class="checkbox-container">
       <Checkbox
         round
         value={String(option.id)}
-        checked={isSelected(option)}
+        checked={isSelected}
         on:change={() => toggleOption(option)}
       >
         <span class="checkbox-label">{option.text}</span>
       </Checkbox>
     </div>
 
-    <div class="votes" on:click={openVotersModal}>
+    <div class="votes" on:click={() => (showVotersModal = true)}>
       <!-- Show icons for the first three votes -->
       {#each { length: 3 } as _, index}
         {#if index < option.votes.length}
