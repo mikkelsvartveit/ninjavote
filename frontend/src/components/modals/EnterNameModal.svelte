@@ -30,7 +30,7 @@
     }
 
     $session = { nickname: nickname.trim(), voterId, voterSecret };
-    localStorage.setItem(String($poll?.id), JSON.stringify(session));
+    localStorage.setItem(String($poll?.id), JSON.stringify($session));
   };
 </script>
 

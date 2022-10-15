@@ -114,35 +114,33 @@
     <div class="loading-container">
       <Loading />
     </div>
-  {:else}
+  {:else if $poll !== null}
     <EnterNameModal />
 
-    {#if $poll !== null}
-      <h1>{$poll.question}</h1>
+    <h1>{$poll.question}</h1>
 
-      {#if $session}
-        <p>Poll joined as <b>{$session.nickname}</b></p>
-      {/if}
-
-      {#each sortedOptions as option (option.id)}
-        <PollOption {feathersApp} {option} />
-      {/each}
-
-      <form on:submit|preventDefault={addOption}>
-        <input type="text" bind:value={newOption} />
-        <Button small filled on:click={addOption}>Create Option</Button>
-      </form>
-    {:else}
-      <h1>Create a new poll</h1>
-      <form on:submit|preventDefault={createPoll}>
-        <input
-          type="text"
-          bind:value={newQuestion}
-          placeholder="Type your question here..."
-        />
-        <button>Create Poll</button>
-      </form>
+    {#if $session}
+      <p>Poll joined as <b>{$session.nickname}</b></p>
     {/if}
+
+    {#each sortedOptions as option (option.id)}
+      <PollOption {feathersApp} {option} />
+    {/each}
+
+    <form on:submit|preventDefault={addOption}>
+      <input type="text" bind:value={newOption} />
+      <Button small filled on:click={addOption}>Create Option</Button>
+    </form>
+  {:else}
+    <h1>Create a new poll</h1>
+    <form on:submit|preventDefault={createPoll}>
+      <input
+        type="text"
+        bind:value={newQuestion}
+        placeholder="Type your question here..."
+      />
+      <button>Create Poll</button>
+    </form>
   {/if}
 </main>
 

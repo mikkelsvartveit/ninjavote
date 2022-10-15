@@ -11,7 +11,7 @@
 <main>
   <Modal open={show} on:change={(event) => !event.detail.value && onClose()}>
     <Dialog title={`Voters for "${option.text}"`} closeCallback={onClose}>
-      {#each option.votes as vote}
+      {#each option.votes as vote (vote.id)}
         <div class="vote">
           <VoterIcon name={vote.name} />
           <p>{vote.name}</p>
