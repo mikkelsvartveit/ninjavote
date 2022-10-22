@@ -1,7 +1,9 @@
 {
-  "name": "frontend",
+  "name": "voterush-frontend",
   "version": "0.0.1",
   "scripts": {
+    "postinstall": "cd ../backend && npm install",
+    "start": "concurrently -n Feathers,SvelteKit -c magenta,yellow \"cd ../backend && npm run dev\" \"cd ../frontend && npm run dev\"",
     "dev": "svelte-kit dev --host",
     "build": "svelte-kit build",
     "package": "svelte-kit package",

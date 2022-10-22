@@ -1,19 +1,11 @@
 {
-  "name": "chatpoll-backend",
-  "description": "",
-  "version": "0.0.0",
-  "homepage": "",
+  "name": "voterush-backend",
+  "version": "0.0.1",
   "private": true,
   "main": "src",
   "keywords": [
     "feathers"
   ],
-  "author": {
-    "name": "Mikkel Svartveit",
-    "email": "mikkel.svartveit@gmail.com"
-  },
-  "contributors": [],
-  "bugs": {},
   "directories": {
     "lib": "src",
     "test": "test/",

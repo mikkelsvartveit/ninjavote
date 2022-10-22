@@ -9,7 +9,7 @@
   "sqlite": {
     "client": "sqlite3",
     "connection": {
-      "filename": "chatpoll_backend.sqlite"
+      "filename": "voterush-db.sqlite"
     }
   }
 }
