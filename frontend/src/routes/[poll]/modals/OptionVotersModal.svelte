@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Dialog, Modal } from "attractions";
-  import type { IOption } from "src/types/poll";
+  import Modal from "$lib/components/Modal.svelte";
+  import type { IOption } from "$lib/types/poll";
   import VoterIcon from "../icons/VoterIcon.svelte";
 
   export let option: IOption;
@@ -9,16 +9,17 @@
 </script>
 
 <main>
-  <Modal open={show} on:change={(event) => !event.detail.value && onClose()}>
-    <Dialog title={`Voters for "${option.text}"`} closeCallback={onClose}>
+  {#if show}
+    <Modal on:close={onClose} allowClose>
+      <span slot="header">Voters for "{option.text}"</span>
       {#each option.votes as vote (vote.id)}
         <div class="vote">
           <VoterIcon name={vote.name} />
           <p>{vote.name}</p>
         </div>
       {/each}
-    </Dialog>
-  </Modal>
+    </Modal>
+  {/if}
 </main>
 
 <style lang="scss">

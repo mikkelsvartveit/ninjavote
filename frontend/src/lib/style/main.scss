@@ -1,0 +1,43 @@
+@use "./variables" as *;
+
+* {
+  font-family: $font, sans-serif;
+  color: $text-color-primary;
+}
+
+.text-field {
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  margin: 10px 0;
+  border: 1px solid #aaa;
+  border-radius: 100px;
+  padding: 8px 16px;
+  box-sizing: border-box;
+  transition-duration: 0.1s;
+
+  &:focus {
+    border: 1px solid $accent-color-primary;
+    outline: none;
+  }
+}
+
+.button {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: $accent-color-primary;
+  color: $text-color-light;
+  box-shadow: 0 0 4px 0 $shadow-color;
+  border: none;
+  border-radius: 100px;
+  padding: 8px 16px;
+  transition-duration: 0.1s;
+
+  &:hover {
+    background-color: transparentize(
+      $color: $accent-color-primary,
+      $amount: 0.2
+    );
+  }
+}

@@ -5,18 +5,19 @@
   import io from "socket.io-client";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
-  import { Button, Loading } from "attractions";
-  import type { IOption, IVote } from "$/types/poll";
-  import PollOption from "$/components/PollOption.svelte";
-  import EnterNameModal from "$/components/modals/EnterNameModal.svelte";
-  import { poll } from "$/store/pollStore";
-  import { session } from "$/store/sessionStore";
+  import type { IOption, IVote } from "$lib/types/poll";
+  import PollOption from "./PollOption.svelte";
+  import EnterNameModal from "./modals/EnterNameModal.svelte";
+  import { poll } from "$lib/store/pollStore";
+  import { session } from "$lib/store/sessionStore";
+  import LoadingIcon from "$lib/icons/loading.svg";
+  import "$lib/style/main.scss";
 
   // Get ID for poll to load
   const { params } = $page;
   const pollId = params.poll;
 
-  let feathersApp: Application<any>;
+  let feathersApp: Application<unknown>;
 
   let isLoading = true;
 
@@ -112,7 +113,7 @@
 <main>
   {#if isLoading}
     <div class="loading-container">
-      <Loading />
+      <img src={LoadingIcon} alt="Loading..." />
     </div>
   {:else if $poll !== null}
     <EnterNameModal />
@@ -129,7 +130,7 @@
 
     <form on:submit|preventDefault={addOption}>
       <input type="text" bind:value={newOption} />
-      <Button small filled on:click={addOption}>Create Option</Button>
+      <button class="button" on:click={addOption}>Create Option</button>
     </form>
   {:else}
     <h1>Create a new poll</h1>
@@ -145,8 +146,6 @@
 </main>
 
 <style lang="scss">
-  @use "../style/main.scss";
-
   main {
     font-size: 16px;
     max-width: 600px;
@@ -155,7 +154,12 @@
   }
 
   .loading-container {
-    margin: 50px auto;
-    font-size: 32px;
+    margin: 30px auto;
+
+    img {
+      display: block;
+      margin: 0 auto;
+      height: 64px;
+    }
   }
 </style>

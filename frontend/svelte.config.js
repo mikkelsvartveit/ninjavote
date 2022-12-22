@@ -1,37 +1,22 @@
 import adapter from "@sveltejs/adapter-static";
+import { dirname, join } from "path";
 import preprocess from "svelte-preprocess";
-import makeAttractionsImporter from "attractions/importer.js";
-import path from "path";
-const __dirname = path.resolve();
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  // Consult https://github.com/sveltejs/svelte-preprocess
+  // Consult https://kit.svelte.dev/docs/integrations#preprocessors
   // for more information about preprocessors
   preprocess: preprocess({
     scss: {
-      importer: makeAttractionsImporter({
-        themeFile: path.join(__dirname, "./src/style/attractions-theme.scss"),
-      }),
-      includePaths: [path.join(__dirname, "./src/style")],
+      prependData: `@use "${join(__dirname, "src/lib/style/variables")}" as *;`,
     },
   }),
 
   kit: {
     adapter: adapter(),
-    vite: {
-      resolve: {
-        alias: {
-          "xmlhttprequest-ssl":
-            "./node_modules/engine.io-client/lib/xmlhttprequest.js",
-          $: path.resolve("./src"),
-        },
-      },
-    },
-  },
-
-  experimental: {
-    inspector: true,
   },
 };
 

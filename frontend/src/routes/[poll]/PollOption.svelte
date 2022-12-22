@@ -1,13 +1,13 @@
 <script lang="ts">
   import type feathers from "@feathersjs/feathers";
-  import { Checkbox } from "attractions";
-  import type { IOption, IVote } from "src/types/poll";
-  import OptionVotersModal from "$/components/modals/OptionVotersModal.svelte";
-  import VoterIcon from "$/components/icons/VoterIcon.svelte";
-  import { poll } from "$/store/pollStore";
-  import { session } from "$/store/sessionStore";
+  import type { IOption, IVote } from "$lib/types/poll";
+  import OptionVotersModal from "./modals/OptionVotersModal.svelte";
+  import VoterIcon from "./icons/VoterIcon.svelte";
+  import { poll } from "$lib/store/pollStore";
+  import { session } from "$lib/store/sessionStore";
+  import Checkbox from "$lib/components/Checkbox.svelte";
 
-  export let feathersApp: feathers.Application<any>;
+  export let feathersApp: feathers.Application<unknown>;
   export let option: IOption;
 
   let showVotersModal = false;
@@ -55,21 +55,16 @@
 
   <div class="option-container" class:selected={isSelected}>
     <div class="checkbox-container">
-      <Checkbox
-        round
-        value={String(option.id)}
-        checked={isSelected}
-        on:change={() => toggleOption(option)}
-      >
+      <Checkbox checked={isSelected} on:change={() => toggleOption(option)}>
         <span class="checkbox-label">{option.text}</span>
       </Checkbox>
     </div>
 
-    <div class="votes" on:click={() => (showVotersModal = true)}>
+    <button class="votes" on:click={() => (showVotersModal = true)}>
       <!-- Show icons for the first three votes -->
       {#each { length: 3 } as _, index}
         {#if index < option.votes.length}
-          <VoterIcon name={option.votes[index].name} />
+          <VoterIcon name={option.votes[index].name} stacked />
         {/if}
       {/each}
 
@@ -77,7 +72,7 @@
       {#if option.votes.length > 3}
         <span class="additional-voters-count">+{option.votes.length - 3}</span>
       {/if}
-    </div>
+    </button>
 
     <div
       class="fraction-indicator"
@@ -89,8 +84,6 @@
 </main>
 
 <style lang="scss">
-  @use "../style/variables";
-
   .option-container {
     display: flex;
     justify-content: space-between;
@@ -101,7 +94,7 @@
     padding: 0 10px;
 
     &.selected {
-      box-shadow: inset 0px 0px 0px 2px variables.$accent-color-primary;
+      box-shadow: inset 0px 0px 0px 2px $accent-color-primary;
     }
 
     * {
@@ -125,6 +118,8 @@
 
     .votes {
       display: flex;
+      background: none;
+      border: none;
       align-items: center;
       padding-left: 10px;
       cursor: pointer;
@@ -141,7 +136,7 @@
       top: 0;
       left: 0;
       height: 100%;
-      background-color: variables.$accent-color-primary;
+      background-color: $accent-color-primary;
       opacity: 0.07;
       z-index: -1;
     }
