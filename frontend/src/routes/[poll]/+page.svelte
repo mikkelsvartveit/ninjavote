@@ -101,6 +101,10 @@
   };
 
   const addOption = async () => {
+    if (!newOption) {
+      return;
+    }
+
     const option = {
       pollId,
       text: newOption,
@@ -130,7 +134,7 @@
 
     <form on:submit|preventDefault={addOption}>
       <input type="text" bind:value={newOption} />
-      <button class="button" on:click={addOption}>Create Option</button>
+      <button class="button">Create Option</button>
     </form>
   {:else}
     <h1>Create a new poll</h1>

@@ -1,4 +1,4 @@
-import type { IPoll } from "$/types/poll";
+import type { IPoll } from "$lib/types/poll";
 import { writable } from "svelte/store";
 import type { Writable } from "svelte/store";
 

@@ -14,40 +14,47 @@
   };
 </script>
 
-<button class="modal-background" on:click={requestClose} />
+<div class="modal-container">
+  <button class="modal-background" on:click={requestClose} />
 
-<div class="modal">
-  <div class="header">
-    <h2 class="header-text">
-      <slot name="header" />
-    </h2>
+  <div class="modal">
+    <div class="header">
+      <h2 class="header-text">
+        <slot name="header" />
+      </h2>
 
-    {#if allowClose}
-      <button class="close-button" on:click={requestClose}>
-        <img alt="close" src={closeIcon} />
-      </button>
-    {/if}
+      {#if allowClose}
+        <button class="close-button" on:click={requestClose}>
+          <img alt="close" src={closeIcon} />
+        </button>
+      {/if}
+    </div>
+    <slot />
   </div>
-  <slot />
 </div>
 
 <style lang="scss">
-  .modal-background {
-    border: none;
+  .modal-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
     z-index: 100;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-background {
+    position: absolute;
+    border: none;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   .modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     max-width: 90vw;
     background-color: white;
     border-radius: 6px;
@@ -58,7 +65,7 @@
   .header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 10px;
 
     .header-text {
@@ -69,8 +76,8 @@
   .close-button {
     background: none;
     position: relative;
-    right: -10px;
     padding: 6px;
+    margin: -6px -6px 0 15px;
     border: none;
     transition-duration: 0.1s;
 
