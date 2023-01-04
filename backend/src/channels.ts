@@ -23,7 +23,6 @@ export default function (app: Application): void {
         connection: RealTimeConnection;
         pollId: string;
       }): void => {
-        console.log(`Poll '${pollId}' opened by ${connection.headers.origin}`);
         app.channel(`polls/${pollId}`).join(connection);
       }
     );
