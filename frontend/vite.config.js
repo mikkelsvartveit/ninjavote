@@ -6,7 +6,7 @@ const config = {
   server: {
     port: 3000,
     proxy: {
-      "/": "http://localhost:3030",
+      "/socket.io": "http://localhost:3030",
     },
   },
 };
