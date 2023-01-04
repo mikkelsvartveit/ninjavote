@@ -19,7 +19,8 @@
     "test": "npm run lint && npm run compile && npm run mocha",
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
     "dev": "ts-node-dev --no-notify src/",
-    "start": "npm run compile && node lib/",
+    "start": "node lib/",
+    "build:frontend": "cd ../frontend && npm ci && npm run build && cd ../backend && rm -rf public && mkdir public && cp -r ../frontend/build/* public",
     "mocha": "mocha --require ts-node/register --require source-map-support/register \"test/**/*.ts\" --recursive --exit",
     "compile": "shx rm -rf lib/ && tsc"
   },
@@ -45,6 +46,7 @@
     "feathers-knex": "^8.0.1",
     "helmet": "^4.6.0",
     "knex": "^2.1.0",
+    "mssql": "^9.0.1",
     "serve-favicon": "^2.5.0",
     "sqlite3": "^5.0.8",
     "winston": "^3.7.2"

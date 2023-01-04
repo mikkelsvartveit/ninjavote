@@ -31,7 +31,7 @@
     : [];
 
   onMount(async () => {
-    const API_URL = `http://${window.location.hostname}:3030/`;
+    const API_URL = window.location.origin;
 
     // Initialize Feathers client
     const socket = io(API_URL);

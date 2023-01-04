@@ -6,7 +6,7 @@
     "default": 50,
     "max": 50
   },
-  "sqlite": {
+  "database": {
     "client": "sqlite3",
     "connection": {
       "filename": "voterush-db.sqlite"

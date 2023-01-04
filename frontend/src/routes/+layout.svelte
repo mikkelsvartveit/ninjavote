@@ -1,6 +1,5 @@
 <script>
   import "$lib/style/main.scss";
-
   import LoadingIcon from "$lib/icons/loading.svg";
   import CloseIcon from "$lib/icons/close.svg";
   import CheckboxIcon from "$lib/icons/check.svg";

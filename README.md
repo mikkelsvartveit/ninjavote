@@ -9,7 +9,7 @@ To install all dependencies and run both the server and the client locally, run 
 ```
 git clone https://github.com/mikkelsvartveit/voterush.git
 cd voterush/frontend
-npm install
+npm run install:all
 npm start
 ```
 

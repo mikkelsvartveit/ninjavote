@@ -1,4 +1,14 @@
 {
-  "host": "voterush-backend-app.feathersjs.com",
-  "port": "PORT"
+  "port": "PORT",
+  "database": {
+    "client": "mssql",
+    "connection": {
+      "server": "DB_SERVER",
+      "port": 1433,
+      "user": "DB_USER",
+      "password": "DB_PASSWORD",
+      "database": "DB_NAME",
+      "encrypt": true
+    }
+  }
 }
