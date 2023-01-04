@@ -12,7 +12,9 @@
   import { poll } from "$lib/store/pollStore";
   import { session } from "$lib/store/sessionStore";
   import LoadingIcon from "$lib/icons/loading.svg";
+  import AddIcon from "$lib/icons/add.svg";
   import "$lib/style/main.scss";
+  import AddOptionModal from "./modals/AddOptionModal.svelte";
 
   // Get ID for poll to load
   const { params } = $page;
@@ -22,9 +24,9 @@
 
   let isLoading = true;
   let error = false;
+  let showAddOptionModal = false;
 
   let newQuestion = "";
-  let newOption = "";
 
   $: sortedOptions = $poll
     ? $poll.options
@@ -78,8 +80,10 @@
     });
 
     feathersApp.hooks({
-      error() {
-        error = true;
+      error(context) {
+        if (context.error.code === 500) {
+          error = true;
+        }
       },
     });
 
@@ -107,19 +111,6 @@
     await feathersApp.service("polls").create(newPoll);
     $poll = await feathersApp.service("polls").get(pollId);
   };
-
-  const addOption = async () => {
-    if (!newOption) {
-      return;
-    }
-
-    const option = {
-      pollId,
-      text: newOption,
-    };
-    await feathersApp.service("options").create(option);
-    newOption = "";
-  };
 </script>
 
 <main>
@@ -130,20 +121,30 @@
   {:else if $poll !== null}
     <EnterNameModal />
 
+    {#if $session}
+      <p>
+        Poll joined as <b>{$session.nickname}</b>
+      </p>
+    {/if}
+
     <h1>{$poll.question}</h1>
 
-    {#if $session}
-      <p>Poll joined as <b>{$session.nickname}</b></p>
+    {#if sortedOptions.length === 0}
+      <p>There are no options yet. Add some below!</p>
     {/if}
 
     {#each sortedOptions as option (option.id)}
       <PollOption {feathersApp} {option} />
     {/each}
 
-    <form on:submit|preventDefault={addOption}>
-      <input type="text" bind:value={newOption} />
-      <button class="button">Create Option</button>
-    </form>
+    <button
+      on:click={() => (showAddOptionModal = true)}
+      id="add-option-button"
+      class="button icon center"
+    >
+      <img src={AddIcon} alt="Plus icon" />
+      <span>Add Option</span>
+    </button>
   {:else}
     <h1>Create a new poll</h1>
     <form on:submit|preventDefault={createPoll}>
@@ -156,6 +157,11 @@
     </form>
   {/if}
 
+  <AddOptionModal
+    show={showAddOptionModal}
+    onClose={() => (showAddOptionModal = false)}
+    {feathersApp}
+  />
   <ErrorRefreshModal show={error} />
 </main>
 
@@ -167,6 +173,10 @@
     padding: 0 5px;
   }
 
+  h1 {
+    margin-top: 10px;
+  }
+
   .loading-container {
     margin: 30px auto;
 
@@ -175,5 +185,9 @@
       margin: 0 auto;
       height: 64px;
     }
+  }
+
+  #add-option-button {
+    margin-top: 20px;
   }
 </style>

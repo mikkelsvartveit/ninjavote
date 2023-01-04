@@ -8,6 +8,9 @@
 
   let isChecked = checked;
 
+  // If the checked prop changes, update the internal state
+  $: checked, (isChecked = checked);
+
   const toggle = () => {
     isChecked = !isChecked;
     dispatch("change", isChecked);
