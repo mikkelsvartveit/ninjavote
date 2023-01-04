@@ -2,9 +2,6 @@
 
 * {
   font-family: $font, sans-serif;
-}
-
-body {
   color: $text-color-primary;
 }
 
@@ -38,6 +35,10 @@ body {
   margin-top: 10px;
   padding: 8px 16px;
   transition-duration: 0.1s;
+
+  span {
+    color: inherit;
+  }
 
   &:hover {
     background-color: transparentize(
