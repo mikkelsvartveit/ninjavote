@@ -22,6 +22,3 @@
     </Modal>
   {/if}
 </main>
-
-<style lang="scss">
-</style>

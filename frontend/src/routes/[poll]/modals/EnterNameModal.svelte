@@ -45,6 +45,7 @@
   {#if $session === null}
     <Modal>
       <span slot="header">Enter name</span>
+
       <form on:submit|preventDefault={createSession}>
         <p>You need a nickname to vote in this poll.</p>
         <input
@@ -70,9 +71,3 @@
     </Modal>
   {/if}
 </main>
-
-<style lang="scss">
-  p.error {
-    color: #b51f1f;
-  }
-</style>

@@ -31,6 +31,7 @@
   box-shadow: 0 0 4px 0 $shadow-color;
   border: none;
   border-radius: 100px;
+  margin-top: 10px;
   padding: 8px 16px;
   transition-duration: 0.1s;
 
@@ -40,4 +41,8 @@
       $amount: 0.2
     );
   }
+}
+
+p.error {
+  color: #b51f1f;
 }

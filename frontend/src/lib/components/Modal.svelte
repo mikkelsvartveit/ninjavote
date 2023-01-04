@@ -29,6 +29,7 @@
         </button>
       {/if}
     </div>
+
     <slot />
   </div>
 </div>
@@ -55,10 +56,13 @@
   }
 
   .modal {
-    max-width: 90vw;
     background-color: white;
     border-radius: 6px;
+    width: 400px;
+    max-width: 100%;
     padding: 20px;
+    margin: 0 20px;
+    box-sizing: border-box;
     z-index: 101;
   }
 
