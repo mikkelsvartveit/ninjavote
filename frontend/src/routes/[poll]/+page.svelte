@@ -8,6 +8,7 @@
   import type { IOption, IVote } from "$lib/types/poll";
   import PollOption from "./PollOption.svelte";
   import EnterNameModal from "./modals/EnterNameModal.svelte";
+  import ErrorRefreshModal from "./modals/ErrorRefreshModal.svelte";
   import { poll } from "$lib/store/pollStore";
   import { session } from "$lib/store/sessionStore";
   import LoadingIcon from "$lib/icons/loading.svg";
@@ -20,6 +21,7 @@
   let feathersApp: Application<unknown>;
 
   let isLoading = true;
+  let error = false;
 
   let newQuestion = "";
   let newOption = "";
@@ -73,6 +75,12 @@
           $poll.options = $poll.options;
         }
       }
+    });
+
+    feathersApp.hooks({
+      error() {
+        error = true;
+      },
     });
 
     const sessionJson = localStorage.getItem(pollId);
@@ -147,6 +155,8 @@
       <button>Create Poll</button>
     </form>
   {/if}
+
+  <ErrorRefreshModal show={error} />
 </main>
 
 <style lang="scss">

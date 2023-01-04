@@ -65,7 +65,7 @@
           </p>
         {/if}
 
-        <button class="button" style="float: right;"> Join </button>
+        <button class="button" style="float: right;">Join</button>
       </form>
     </Modal>
   {/if}
