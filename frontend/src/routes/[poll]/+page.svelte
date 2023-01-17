@@ -81,6 +81,7 @@
 
     feathersApp.hooks({
       error(context) {
+        console.error(context.error);
         if (context.error.code === 500) {
           error = true;
         }

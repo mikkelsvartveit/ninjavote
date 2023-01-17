@@ -1,0 +1,13 @@
+{
+  "port": "PORT",
+  "database": {
+    "client": "mssql",
+    "connection": {
+      "server": "DB_SERVER",
+      "user": "DB_USER",
+      "password": "DB_PASSWORD",
+      "database": "DB_NAME",
+      "encrypt": true
+    }
+  }
+}

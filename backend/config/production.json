@@ -1,14 +1,14 @@
 {
   "port": "PORT",
   "database": {
-    "client": "mssql",
+    "client": "mysql",
     "connection": {
-      "server": "DB_SERVER",
-      "port": 1433,
+      "host": "DB_SERVER",
+      "port": 3306,
       "user": "DB_USER",
       "password": "DB_PASSWORD",
-      "database": "DB_NAME",
-      "encrypt": true
-    }
+      "database": "DB_NAME"
+    },
+    "pool": { "min": 0, "max": 7 }
   }
 }
