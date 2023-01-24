@@ -13,6 +13,7 @@
   import { session } from "$lib/store/sessionStore";
   import LoadingIcon from "$lib/icons/loading.svg";
   import AddIcon from "$lib/icons/add.svg";
+  import CheckIcon from "$lib/icons/check.svg";
   import "$lib/style/main.scss";
   import AddOptionModal from "./modals/AddOptionModal.svelte";
 
@@ -147,14 +148,17 @@
       <span>Add Option</span>
     </button>
   {:else}
-    <h1>Create a new poll</h1>
     <form on:submit|preventDefault={createPoll}>
       <input
         type="text"
         bind:value={newQuestion}
         placeholder="Type your question here..."
+        class="text-field new-poll-input"
       />
-      <button>Create Poll</button>
+      <button class="button create-poll-button center">
+        <img src={CheckIcon} alt="Confirm icon" />
+        <span>Create Poll</span>
+      </button>
     </form>
   {/if}
 
@@ -175,6 +179,7 @@
   }
 
   h1 {
+    font-weight: 700;
     margin-top: 10px;
   }
 
@@ -186,6 +191,22 @@
       margin: 0 auto;
       height: 64px;
     }
+  }
+
+  .new-poll-input {
+    margin: 50px 0 30px 0;
+    padding: 0;
+    text-align: center;
+    border: none;
+    border-radius: 0;
+    font-size: 24px;
+    font-weight: 500;
+    caret-color: $accent-color-primary;
+  }
+
+  .create-poll-button {
+    font-size: 18px;
+    padding: 10px 20px;
   }
 
   #add-option-button {

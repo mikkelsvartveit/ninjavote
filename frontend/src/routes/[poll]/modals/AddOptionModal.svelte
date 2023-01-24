@@ -11,8 +11,10 @@
 
   let optionText = "";
   let errorMessage = "";
-  let emptyOptionError = false;
-  let optionAlreadyExistsError = false;
+
+  // Focus the input field when the modal is shown
+  let inputElement: HTMLInputElement;
+  $: show, inputElement?.focus();
 
   const addOption = async () => {
     if ($poll === null) {
@@ -67,6 +69,7 @@
 
       <form on:submit|preventDefault={addOption}>
         <input
+          bind:this={inputElement}
           type="text"
           class="text-field"
           bind:value={optionText}

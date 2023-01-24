@@ -10,6 +10,7 @@
     "client": "sqlite3",
     "connection": {
       "filename": "voterush-db.sqlite"
-    }
+    },
+    "pool": { "min": 0, "max": 1 }
   }
 }
