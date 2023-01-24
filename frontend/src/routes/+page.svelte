@@ -1,10 +1,14 @@
 <script lang="ts">
-  // import "$lib/style/main.scss";
-  import type { IOption, IVote } from "$lib/types/poll";
-  const test = {} as IOption;
-</script>
+  import { goto } from "$app/navigation";
+  import { onMount } from "svelte";
 
-<h1>Welcome to SvelteKit</h1>
-<p>
-  Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
-</p>
+  const generateId = () => {
+    // Generate alphanumeric id of length 8
+    return Math.random().toString(36).substring(2, 10);
+  };
+
+  onMount(() => {
+    // Redirect to a new poll
+    goto(`/${generateId()}`, { replaceState: true });
+  });
+</script>
