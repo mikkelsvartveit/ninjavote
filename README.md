@@ -1,14 +1,14 @@
-# Voterush
+# Ninjavote
 
-Voterush is a web application for instantly creating simple polls in your group chats.
+Ninjavote is a web application for instantly creating simple polls in your group chats.
 
 ### Running locally
 
 To install all dependencies and run both the server and the client locally, run the following commands:
 
 ```
-git clone https://github.com/mikkelsvartveit/voterush.git
-cd voterush/frontend
+git clone https://github.com/mikkelsvartveit/ninjavote.git
+cd ninjavote/frontend
 npm run install:all
 npm start
 ```
