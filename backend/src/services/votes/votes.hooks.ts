@@ -4,8 +4,8 @@ import { iff, isProvider, disallow, discard } from "feathers-hooks-common";
 export default {
   before: {
     all: [],
-    find: [],
-    get: [],
+    find: [disallow("external")],
+    get: [disallow("external")],
     create: [],
     update: [disallow()],
     patch: [disallow()],

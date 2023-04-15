@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { env } from "$env/dynamic/public";
   import type { Application } from "@feathersjs/feathers";
   import feathers from "@feathersjs/client";
   import socketio from "@feathersjs/socketio-client";
@@ -36,7 +37,11 @@
     : [];
 
   onMount(async () => {
-    const API_URL = window.location.origin;
+    const API_URL = env.PUBLIC_API_URL;
+
+    if (!API_URL) {
+      throw new Error("Environment variable API_URL is not defined");
+    }
 
     // Initialize Feathers client
     const socket = io(API_URL);

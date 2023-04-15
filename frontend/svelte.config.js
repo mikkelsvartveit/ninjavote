@@ -1,4 +1,4 @@
-import adapter from "@sveltejs/adapter-static";
+import adapter from "@sveltejs/adapter-auto";
 import { dirname, join } from "path";
 import preprocess from "svelte-preprocess";
 import { fileURLToPath } from "url";
@@ -16,9 +16,7 @@ const config = {
   }),
 
   kit: {
-    adapter: adapter({
-      fallback: "index.html",
-    }),
+    adapter: adapter(),
   },
 };
 
