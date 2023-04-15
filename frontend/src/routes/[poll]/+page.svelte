@@ -50,6 +50,20 @@
     feathersApp = feathers();
     feathersApp.configure(socketio(socket));
 
+    socket.on("connect", async () => {
+      console.log("Socket connected");
+
+      try {
+        $poll = await feathersApp.service("polls").get(pollId);
+      } catch (e) {
+        $poll = null;
+      }
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Socket lost connection");
+    });
+
     // Register Feathers services
     feathersApp.service("options").on("created", (option: IOption) => {
       if ($poll) {
@@ -102,9 +116,6 @@
     } else {
       $session = null;
     }
-
-    // Initialize Feathers session
-    feathersApp.service("polls").get(pollId);
 
     isHydrated = true;
   });
