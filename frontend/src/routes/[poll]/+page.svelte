@@ -104,9 +104,7 @@
     }
 
     // Initialize Feathers session
-    if ($poll) {
-      feathersApp.service("polls").get(pollId);
-    }
+    feathersApp.service("polls").get(pollId);
 
     isHydrated = true;
   });
