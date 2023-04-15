@@ -1,5 +1,3 @@
-import path from "path";
-import favicon from "serve-favicon";
 import compress from "compression";
 import helmet from "helmet";
 import cors from "cors";
@@ -17,7 +15,6 @@ import appHooks from "./app.hooks";
 import channels from "./channels";
 import { HookContext as FeathersHookContext } from "@feathersjs/feathers";
 import knex from "./knex";
-import { Request, Response } from "express";
 
 const app: Application = express(feathers());
 export type HookContext<T = any> = {
@@ -36,9 +33,6 @@ app.use(cors());
 app.use(compress());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(favicon(path.join(app.get("public"), "favicon.png")));
-// Host the public folder
-app.use("/", express.static(app.get("public")));
 
 // Set up Plugins and providers
 app.configure(express.rest());
@@ -58,10 +52,5 @@ app.configure(channels);
 app.use(express.errorHandler({ logger } as any));
 
 app.hooks(appHooks);
-
-// Redirect other routes to index.html to let Svelte handle routing
-app.get("*", (req: Request, res: Response) => {
-  res.sendFile(path.resolve(__dirname, "../public", "index.html"));
-});
 
 export default app;

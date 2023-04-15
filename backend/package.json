@@ -20,7 +20,6 @@
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
     "dev": "ts-node-dev --no-notify src/",
     "start": "node lib/",
-    "build:frontend": "cd ../frontend && npm ci && npm run build && cd ../backend && rm -rf public && mkdir public && cp -r ../frontend/build/* public",
     "mocha": "mocha --require ts-node/register --require source-map-support/register \"test/**/*.ts\" --recursive --exit",
     "compile": "shx rm -rf lib/ && tsc"
   },

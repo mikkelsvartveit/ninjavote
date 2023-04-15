@@ -1,6 +1,7 @@
 <script lang="ts">
   import { env } from "$env/dynamic/public";
   import type { Application } from "@feathersjs/feathers";
+  import type { PageData } from "./$types";
   import feathers from "@feathersjs/client";
   import socketio from "@feathersjs/socketio-client";
   import io from "socket.io-client";
@@ -12,19 +13,22 @@
   import ErrorRefreshModal from "./modals/ErrorRefreshModal.svelte";
   import { poll } from "$lib/store/pollStore";
   import { session } from "$lib/store/sessionStore";
-  import LoadingIcon from "$lib/icons/loading.svg";
   import AddIcon from "$lib/icons/add.svg";
   import CheckIcon from "$lib/icons/check.svg";
   import "$lib/style/main.scss";
   import AddOptionModal from "./modals/AddOptionModal.svelte";
 
-  // Get ID for poll to load
+  // Set poll from load function
+  export let data: PageData;
+  $poll = data.poll;
+
+  // Get ID for poll
   const { params } = $page;
   const pollId = params.poll;
 
   let feathersApp: Application<unknown>;
 
-  let isLoading = true;
+  let isHydrated = false;
   let error = false;
   let showAddOptionModal = false;
 
@@ -36,15 +40,13 @@
         .sort((a: IOption, b: IOption) => b.votes.length - a.votes.length)
     : [];
 
-  onMount(async () => {
-    const API_URL = env.PUBLIC_API_URL;
-
-    if (!API_URL) {
+  onMount(() => {
+    if (!env.PUBLIC_API_URL) {
       throw new Error("Environment variable API_URL is not defined");
     }
 
     // Initialize Feathers client
-    const socket = io(API_URL);
+    const socket = io(env.PUBLIC_API_URL);
     feathersApp = feathers();
     feathersApp.configure(socketio(socket));
 
@@ -101,13 +103,12 @@
       $session = null;
     }
 
-    try {
-      $poll = await feathersApp.service("polls").get(pollId);
-    } catch (error) {
-      $poll = null;
-    } finally {
-      isLoading = false;
+    // Initialize Feathers session
+    if ($poll) {
+      feathersApp.service("polls").get(pollId);
     }
+
+    isHydrated = true;
   });
 
   const createPoll = async () => {
@@ -121,12 +122,10 @@
 </script>
 
 <main>
-  {#if isLoading}
-    <div class="loading-container">
-      <img src={LoadingIcon} alt="Loading..." />
-    </div>
-  {:else if $poll !== null}
-    <EnterNameModal />
+  {#if $poll !== null}
+    {#if isHydrated}
+      <EnterNameModal />
+    {/if}
 
     {#if $session}
       <p>
@@ -186,16 +185,6 @@
   h1 {
     font-weight: 700;
     margin-top: 10px;
-  }
-
-  .loading-container {
-    margin: 30px auto;
-
-    img {
-      display: block;
-      margin: 0 auto;
-      height: 64px;
-    }
   }
 
   .new-poll-input {
