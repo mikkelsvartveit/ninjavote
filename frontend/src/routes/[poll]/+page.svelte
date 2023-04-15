@@ -121,6 +121,12 @@
   };
 </script>
 
+<svelte:head>
+  <title>
+    {$poll ? `${$poll.question} - Ninjavote` : "Ninjavote"}
+  </title>
+</svelte:head>
+
 <main>
   {#if $poll !== null}
     {#if isHydrated}
