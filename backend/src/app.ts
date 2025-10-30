@@ -27,9 +27,17 @@ app.configure(configuration());
 app.use(
   helmet({
     contentSecurityPolicy: false,
-  })
+  }),
 );
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "https://vote.mikkel.cloud",
+    ],
+  }),
+);
 app.use(compress());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
