@@ -1,4 +1,5 @@
-import adapter from "@sveltejs/adapter-auto";
+import adapterAuto from "@sveltejs/adapter-auto";
+import adapterNode from "@sveltejs/adapter-node";
 import { dirname, join } from "path";
 import preprocess from "svelte-preprocess";
 import { fileURLToPath } from "url";
@@ -16,7 +17,7 @@ const config = {
   }),
 
   kit: {
-    adapter: adapter(),
+    adapter: process.env.CF_PAGES ? adapterAuto() : adapterNode(),
   },
 };
 
